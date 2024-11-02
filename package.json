@@ -1,0 +1,47 @@
+{
+  "name": "body-aes-rsa",
+  "version": "1.0.0",
+  "description": "Package for encrypting the body with combined RSA and AES encryption.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "clean": "rimraf lib",
+    "build": "npm run clean && tsc",
+    "test": "jest",
+    "prepublish": "npm run test && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vmatteus/body-aes-rsa.git"
+  },
+  "keywords": [
+    "crypto",
+    "front-end",
+    "aes",
+    "rsa",
+    "typescript"
+  ],
+  "author": "Vinícius Matteus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vmatteus/body-aes-rsa/issues"
+  },
+  "homepage": "https://github.com/vmatteus/body-aes-rsa#readme",
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "lib"
+    ]
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.3"
+  }
+}
