@@ -1,15 +1,56 @@
-# body-aes-rsa
+# Combined Symmetric and Asymmetric Encryption (AES and RSA)
 
-## Variáveis de Ambiente
+This package aims to encrypt data using a combination of symmetric (AES) and asymmetric (RSA) encryption, leveraging the strengths of each. AES uses a symmetric key to encrypt the content, allowing for the processing of data of any size. RSA uses an asymmetric key, but it is more suitable for encrypting limited-size data.
 
-Este pacote usa as seguintes variáveis de ambiente:
+## Example of an Encrypted Request
+```javascript
+import { CryptoService } from './CryptoAesRSA';
 
-- `RSA_PRIVATE_KEY`: Chave da API, usada para autenticação.
-- `RSA_PUBLIC_KEY`: URL de conexão com o banco de dados.
+const cryptoService = new CryptoService();
 
-### Exemplo de Configuração
+async function sendEncryptedRequest(url, data) {
+    try {
+        // Encrypt the data
+        const { encryptedData, encryptedSessionKey, iv } = cryptoService.encrypt(JSON.stringify(data));
 
-Crie um arquivo `.env` no diretório raiz do seu projeto e adicione:
+        // Send the request with the encrypted body
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                encryptedData,
+                encryptedSessionKey,
+                iv,
+            }),
+        });
+
+        const responseData = await response.json();
+        console.log("Response from server:", responseData);
+    } catch (error) {
+        console.error("Encryption or request failed:", error);
+    }
+}
+
+// Usage example
+const data = {
+    message: "Hello, this is a secure message!",
+};
+
+sendEncryptedRequest('https://example.com/api/secure-endpoint', data);
+```
+
+## Environment Variables
+
+This package uses the following environment variables:
+
+- `RSA_PRIVATE_KEY`: PRIVATE KEY, required for decryption
+- `RSA_PUBLIC_KEY`: PUBLIC KEY, required for encryption
+
+### Configuration Example
+
+Create a `.env` file in the root directory of your project and add:
 
 ```plaintext
 RSA_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
@@ -21,4 +62,4 @@ RSA_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----
 -----END PUBLIC KEY-----"
 ```
 
-Para rodar os testes, crie o `.env.test`.
+To run the tests, create a `.env.test` file.

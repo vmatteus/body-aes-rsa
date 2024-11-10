@@ -21,7 +21,6 @@ export class CryptoService {
     private encryptSessionWithRSA(data: string, sessionKey: string, iv: string): string {   
         const sessionKeyArray = CryptoJS.enc.Hex.parse(sessionKey)
         const ivWordarray = CryptoJS.enc.Hex.parse(iv);
-
         return CryptoJS.AES.encrypt(data, sessionKeyArray, {
             iv: ivWordarray,
             mode: CryptoJS.mode.CBC,
@@ -31,6 +30,9 @@ export class CryptoService {
 
     private encryptDataWithRSA(data: string): string | false {
         const rsa = new JSEcrypt();
+        if (!this.rsaPublicKey) {
+            return false;
+        }
         rsa.setPublicKey(this.rsaPublicKey);
         return rsa.encrypt(data);
     }
