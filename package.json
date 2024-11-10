@@ -9,7 +9,7 @@
     "build": "npm run clean && tsc",
     "test": "jest",
     "prepublish": "npm run test && npm run build",
-    "postinstall": "node -e \"require('path').resolve(__dirname, './scripts/generateEnv.js')\""
+    "postinstall": "node ./scripts/generateEnv.js"
   },
   "repository": {
     "type": "git",
