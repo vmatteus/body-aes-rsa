@@ -1,5 +1,5 @@
 {
-  "name": "@vmatteus/crypto-aes-rsa",
+  "name": "crypto-aes-rsa",
   "version": "1.0.1",
   "description": "Package for encrypting the body with combined RSA and AES encryption.",
   "main": "lib/index.js",
