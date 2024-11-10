@@ -41,6 +41,44 @@ const data = {
 sendEncryptedRequest('https://example.com/api/secure-endpoint', data);
 ```
 
+## Example of Decrypting on Backend with TypeScript
+```typescript
+import { CryptoService } from './CryptoAesRSA';
+
+const cryptoService = new CryptoService();
+
+async function handleEncryptedRequest(req, res) {
+    try {
+        const { encryptedData, encryptedSessionKey, iv } = req.body;
+
+        // Decrypt the data
+        const decryptedData = cryptoService.decrypt(encryptedData, encryptedSessionKey, iv);
+
+        // Process the decrypted data
+        const data = JSON.parse(decryptedData);
+        console.log("Decrypted data:", data);
+
+        // Send a response back to the client
+        res.json({ message: "Data received and decrypted successfully", data });
+    } catch (error) {
+        console.error("Decryption failed:", error);
+        res.status(500).json({ error: "Decryption failed" });
+    }
+}
+
+// Example usage with an Express server
+import express from 'express';
+const app = express();
+
+app.use(express.json());
+
+app.post('/api/secure-endpoint', handleEncryptedRequest);
+
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
+```
+
 ## Environment Variables
 
 This package uses the following environment variables:
