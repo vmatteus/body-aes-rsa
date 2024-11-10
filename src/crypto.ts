@@ -8,8 +8,8 @@ export class CryptoService {
     private rsaPublicKey: string;
 
     constructor() {
-        this.rsaPrivateKey = '';
-        this.rsaPublicKey = '';
+        this.rsaPrivateKey = process.env.RSA_PRIVATE_KEY || '';
+        this.rsaPublicKey = process.env.RSA_PUBLIC_KEY || '';
     }
 
     private generateSessionKeyAndIV(): { sessionKey: string, iv: string } {
@@ -39,14 +39,6 @@ export class CryptoService {
         const rsa = new JSEcrypt();
         rsa.setPrivateKey(this.rsaPrivateKey);
         return rsa.decrypt(data);
-    }
-    
-    public setRsaPrivateKey(rsaPrivateKey: string): void {
-        this.rsaPrivateKey = rsaPrivateKey;
-    }
-
-    public setRsaPublicKey(rsaPublicKey: string): void {
-        this.rsaPublicKey = rsaPublicKey;
     }
 
     public encrypt(data: string): EncryptionResult {

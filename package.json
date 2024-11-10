@@ -29,7 +29,8 @@
   "homepage": "https://github.com/vmatteus/body-aes-rsa#readme",
   "jest": {
     "preset": "ts-jest",
-    "testEnvironment": "jsdom",
+    "testEnvironment": "jest-environment-jsdom",
+    "setupFiles": ["<rootDir>/jest.setup.ts"],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "lib"
@@ -48,6 +49,7 @@
   },
   "dependencies": {
     "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.5",
     "jsencrypt": "^3.3.2"
   }
 }
