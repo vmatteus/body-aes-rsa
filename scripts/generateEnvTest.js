@@ -2,7 +2,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const envTestPath = path.join(__dirname, '../.env.test');
+const projectDir = path.resolve(__dirname, '../..');
+const envTestPath = path.join(projectDir, '.env');
 
 if (!fs.existsSync(envTestPath)) {
   const envTestContent = `
