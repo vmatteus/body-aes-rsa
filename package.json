@@ -30,7 +30,7 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "jest-environment-jsdom",
-    "setupFiles": ["<rootDir>/jest.setup.ts"],
+    "setupFiles": ["<rootDir>/scripts/generateEnvTest.js", "<rootDir>/jest.setup.ts"],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "lib"
