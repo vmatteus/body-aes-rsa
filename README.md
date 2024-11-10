@@ -78,8 +78,22 @@ app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
 ```
+## Generate RSA Keys
+
+To use this package, you need to generate RSA keys. Follow the steps below to generate a private key and a public key using OpenSSL.
+
+### Generate Private Key
+```sh
+openssl genrsa -out rsa_1024_priv.pem 1024
+```
+
+### Generate Public Key
+```sh
+openssl rsa -pubout -in rsa_1024_priv.pem -out rsa_1024_pub.pem
+```
 
 ## Environment Variables
+
 
 This package uses the following environment variables:
 
@@ -101,3 +115,4 @@ RSA_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----
 ```
 
 To run the tests, create a `.env.test` file.
+
