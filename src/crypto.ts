@@ -49,7 +49,7 @@ export class CryptoService {
         const encryptedSessionKey = this.encryptDataWithRSA(sessionKey);
 
         if (!encryptedSessionKey) {
-            console.warn('RSA public key not available, only AES encryption applied');
+            console.log('RSA public key not available, only AES encryption applied');
             return {
                 encryptedData,
                 encryptedSessionKey: sessionKey,
