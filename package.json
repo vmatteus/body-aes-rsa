@@ -1,5 +1,5 @@
 {
-  "name": "crypto-aes-rsa",
+  "name": "@vmatteus/crypto-aes-rsa",
   "version": "1.0.0",
   "description": "Package for encrypting the body with combined RSA and AES encryption.",
   "main": "lib/index.js",
@@ -8,8 +8,7 @@
     "clean": "rimraf lib",
     "build": "npm run clean && tsc",
     "test": "jest",
-    "prepublish": "npm run test && npm run build",
-    "postinstall": "node ./scripts/generateEnv.js"
+    "prepublish": "npm run test && npm run build"
   },
   "repository": {
     "type": "git",
