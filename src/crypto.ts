@@ -1,11 +1,11 @@
 import CryptoJS from 'crypto-js';
-import JSEcrypt from 'jsencrypt';
+import JSEncrypt from 'jsencrypt';
 import { EncryptionResult } from './types';
 
 export class CryptoService {
 
-    private rsaPrivateKey: string;
-    private rsaPublicKey: string;
+    private rsaPrivateKey?: string;
+    private rsaPublicKey?: string;
 
     constructor() {
         this.rsaPrivateKey = process.env.RSA_PRIVATE_KEY || '';
@@ -18,61 +18,66 @@ export class CryptoService {
         return { sessionKey, iv };
     }
 
-    private encryptSessionWithRSA(data: string, sessionKey: string, iv: string): string {   
-        const sessionKeyArray = CryptoJS.enc.Hex.parse(sessionKey)
+    private encryptSessionWithAES(data: string, sessionKey: string, iv: string): string {
+        const sessionKeyArray = CryptoJS.enc.Hex.parse(sessionKey);
         const ivWordarray = CryptoJS.enc.Hex.parse(iv);
         return CryptoJS.AES.encrypt(data, sessionKeyArray, {
             iv: ivWordarray,
             mode: CryptoJS.mode.CBC,
-            padding: CryptoJS.pad.Pkcs7
+            padding: CryptoJS.pad.Pkcs7,
         }).toString();
     }
 
     private encryptDataWithRSA(data: string): string | false {
-        const rsa = new JSEcrypt();
-        if (!this.rsaPublicKey) {
-            return false;
-        }
+        if (!this.rsaPublicKey) return false;
+        const rsa = new JSEncrypt();
         rsa.setPublicKey(this.rsaPublicKey);
         return rsa.encrypt(data);
     }
 
     private decryptDataWithRSA(data: string): string | false {
-        const rsa = new JSEcrypt();
+        if (!this.rsaPrivateKey) return false;
+        const rsa = new JSEncrypt();
         rsa.setPrivateKey(this.rsaPrivateKey);
         return rsa.decrypt(data);
     }
 
     public encrypt(data: string): EncryptionResult {
         const { sessionKey, iv } = this.generateSessionKeyAndIV();
-        const encryptedData = this.encryptSessionWithRSA(data, sessionKey, iv);
+        const encryptedData = this.encryptSessionWithAES(data, sessionKey, iv);
+
         const encryptedSessionKey = this.encryptDataWithRSA(sessionKey);
 
         if (!encryptedSessionKey) {
-            throw new Error('Failed to encrypt session key');
+            console.warn('RSA public key not available, only AES encryption applied');
+            return {
+                encryptedData,
+                encryptedSessionKey: sessionKey,
+                iv,
+            };
         }
 
         return {
             encryptedData,
             encryptedSessionKey,
-            iv
+            iv,
         };
     }
 
     public decrypt(encryptedData: string, encryptedSessionKey: string, iv: string): string {
-        const decryptedSessionKey = this.decryptDataWithRSA(encryptedSessionKey);
+        const sessionKey = this.rsaPrivateKey ? this.decryptDataWithRSA(encryptedSessionKey) : encryptedSessionKey;
 
-        if (!decryptedSessionKey) {
-            throw new Error('Failed to decrypt session key');
+        if (!sessionKey) {
+            throw new Error('Failed to decrypt the session key');
         }
 
-        const sessionKeyArray = CryptoJS.enc.Hex.parse(decryptedSessionKey);
+        const sessionKeyArray = CryptoJS.enc.Hex.parse(sessionKey);
         const ivWordarray = CryptoJS.enc.Hex.parse(iv);
 
         return CryptoJS.AES.decrypt(encryptedData, sessionKeyArray, {
             iv: ivWordarray,
             mode: CryptoJS.mode.CBC,
-            padding: CryptoJS.pad.Pkcs7
+            padding: CryptoJS.pad.Pkcs7,
         }).toString(CryptoJS.enc.Utf8);
     }
 }
