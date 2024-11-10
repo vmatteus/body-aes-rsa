@@ -8,7 +8,8 @@
     "clean": "rimraf lib",
     "build": "npm run clean && tsc",
     "test": "jest",
-    "prepublish": "npm run test && npm run build"
+    "prepublish": "npm run test && npm run build",
+    "postinstall": "node scripts/generateEnv.js"
   },
   "repository": {
     "type": "git",
